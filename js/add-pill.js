@@ -1,77 +1,33 @@
 import { auth, db } from "./firebase.js";
-import { 
-  collection, 
-  addDoc 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import {
+  collection,
+  addDoc
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
-// Redirect if not logged in
-let currentUser = null;
-onAuthStateChanged(auth, user => {
-  if (!user) {
-    window.location.href = "login.html";
-  } else {
-    currentUser = user;
-    addTimeField(); // Start with one time field
-  }
-});
+const form = document.getElementById("addPillForm");
 
-const timesContainer = document.getElementById("timesContainer");
-const addTimeBtn = document.getElementById("addTimeBtn");
-const savePillBtn = document.getElementById("savePillBtn");
-const saveMsg = document.getElementById("saveMsg");
+onAuthStateChanged(auth, (user) => {
+  if (!user) return;
 
-// Add a new time input
-function addTimeField() {
-  const wrapper = document.createElement("div");
-  wrapper.className = "time-row";
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  wrapper.innerHTML = `
-    <input type="time" class="input time-input">
-  `;
+    const name = form.name.value.trim();
+    const time = form.time.value;
+    const start = form.start.value;
+    const end = form.end.value;
 
-  timesContainer.appendChild(wrapper);
-}
+    await addDoc(collection(db, "users", user.uid, "pills"), {
+      name,
+      time,
+      start,
+      end
+    });
 
-addTimeBtn.addEventListener("click", addTimeField);
-
-// Save pill to Firestore
-savePillBtn.addEventListener("click", async () => {
-  const name = document.getElementById("pillName").value.trim();
-  const dosage = document.getElementById("pillDosage").value.trim();
-  const startDate = document.getElementById("startDate").value;
-  const endDate = document.getElementById("endDate").value;
-
-  const timeInputs = document.querySelectorAll(".time-input");
-  const times = [...timeInputs].map(t => t.value).filter(v => v);
-
-  if (!name || times.length === 0 || !startDate) {
-    saveMsg.textContent = "Please fill pill name, at least one time, and start date.";
-    saveMsg.style.color = "red";
-    return;
-  }
-
-  await addDoc(collection(db, "users", currentUser.uid, "pills"), {
-    name,
-    dosage,
-    times,
-    startDate,
-    endDate: endDate || null
+    alert("Pill saved!");
+    window.location.href = "today.html";
   });
-
-  saveMsg.textContent = "Pill saved!";
-  saveMsg.style.color = "green";
-
-  // Clear form
-  document.getElementById("pillName").value = "";
-  document.getElementById("pillDosage").value = "";
-  document.getElementById("startDate").value = "";
-  document.getElementById("endDate").value = "";
-  timesContainer.innerHTML = "";
-  addTimeField();
-});
-
-// Back button
-document.getElementById("backBtn").addEventListener("click", () => {
-  window.location.href = "today.html";
 });

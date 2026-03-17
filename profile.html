@@ -4,53 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profile</title>
-  <link rel="stylesheet" href="styles/styles.css">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 
-<body data-page="profile">
+<body>
 
-  <div class="container">
+  <h1 class="title">Profile</h1>
 
-    <h1 class="title">Profile</h1>
-
-    <div class="card">
-
-      <div class="label">Logged in as</div>
-      <div id="userEmail" class="profile-email">Loading...</div>
-
-      <button id="logoutBtn" class="primary-btn" style="margin-top: 30px;">
-        Logout
-      </button>
-
-    </div>
-
+  <div class="card">
+    <p id="userEmail" class="info"></p>
+    <button id="logoutBtn" class="secondary-btn">Logout</button>
   </div>
 
-  <!-- Bottom Navigation -->
   <nav class="bottom-nav">
-    <a href="today.html" class="nav-item" data-page="today">
-      <span class="nav-icon">📅</span>
-      <span class="nav-label">Today</span>
-    </a>
-
-    <a href="add-pill.html" class="nav-item" data-page="add">
-      <span class="nav-icon">➕</span>
-      <span class="nav-label">Add Pill</span>
-    </a>
-
-    <a href="history.html" class="nav-item" data-page="history">
-      <span class="nav-icon">📘</span>
-      <span class="nav-label">History</span>
-    </a>
-
-    <a href="profile.html" class="nav-item" data-page="profile">
-      <span class="nav-icon">👤</span>
-      <span class="nav-label">Profile</span>
-    </a>
+    <a href="today.html" class="nav-item">📅 Today</a>
+    <a href="add-pill.html" class="nav-item">➕ Add Pill</a>
+    <a href="history.html" class="nav-item">📘 History</a>
+    <a href="profile.html" class="nav-item active">👤 Profile</a>
   </nav>
-<script type="module" src="js/firebase.js"></script>
 
-  <script src="js/nav.js"></script>
+  <script type="module" src="js/firebase.js"></script>
+  <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/profile.js"></script>
+
 </body>
 </html>

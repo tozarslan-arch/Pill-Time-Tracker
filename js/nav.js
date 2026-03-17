@@ -1,9 +1,7 @@
-// Detect current page
-const page = document.body.getAttribute("data-page");
+const items = document.querySelectorAll(".nav-item");
 
-// Highlight active tab
-document.querySelectorAll(".nav-item").forEach(item => {
-  if (item.dataset.page === page) {
+items.forEach((item) => {
+  if (item.href.includes(location.pathname)) {
     item.classList.add("active");
   }
 });

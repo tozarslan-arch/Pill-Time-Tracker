@@ -1,66 +1,32 @@
 import { auth, db } from "./firebase.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import {
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import {
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
+const dateInput = document.getElementById("historyDate");
+const list = document.getElementById("historyList");
 
-let currentUser = null;
+onAuthStateChanged(auth, (user) => {
+  if (!user) return;
 
-// Redirect if not logged in
-onAuthStateChanged(auth, user => {
-  if (!user) {
-    window.location.href = "login.html";
-  } else {
-    currentUser = user;
-  }
-});
+  dateInput.addEventListener("change", async () => {
+    const date = dateInput.value;
+    if (!date) return;
 
-const loadBtn = document.getElementById("loadHistoryBtn");
-const historyResults = document.getElementById("historyResults");
+    const logsRef = collection(db, "users", user.uid, "logs", date, "items");
+    const snapshot = await getDocs(logsRef);
 
-loadBtn.addEventListener("click", async () => {
-  const date = document.getElementById("historyDate").value;
+    list.innerHTML = "";
 
-  if (!date) {
-    historyResults.innerHTML = `<p>Please select a date.</p>`;
-    return;
-  }
-
-  const logRef = doc(db, "users", currentUser.uid, "logs", date);
-  const logSnap = await getDoc(logRef);
-
-  if (!logSnap.exists()) {
-    historyResults.innerHTML = `
-      <div class="card">
-        <p>No records for this date.</p>
-      </div>
-    `;
-    return;
-  }
-
-  const data = logSnap.data();
-
-  historyResults.innerHTML = "";
-
-  Object.keys(data).forEach(key => {
-    const taken = data[key];
-    const [time, pillName] = key.split("-");
-
-    const card = document.createElement("div");
-    card.className = "card";
-
-    card.innerHTML = `
-      <div class="pill-name">${pillName}</div>
-      <div class="pill-time">${time}</div>
-      <div class="history-status ${taken ? "taken" : "not-taken"}">
-        ${taken ? "✔ Taken" : "✘ Not Taken"}
-      </div>
-    `;
-
-    historyResults.appendChild(card);
+    snapshot.forEach((doc) => {
+      const item = document.createElement("div");
+      item.className = "pill-item";
+      item.textContent = doc.data().name;
+      list.appendChild(item);
+    });
   });
-});
-
-// Back button
-document.getElementById("backBtn").addEventListener("click", () => {
-  window.location.href = "today.html";
 });
