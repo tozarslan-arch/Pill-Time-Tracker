@@ -6,11 +6,8 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
-// Elements
+// LOGIN FORM
 const loginForm = document.getElementById("loginForm");
-const signupForm = document.getElementById("signupForm");
-
-// LOGIN
 if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -22,12 +19,13 @@ if (loginForm) {
       await signInWithEmailAndPassword(auth, email, password);
       window.location.href = "today.html";
     } catch (error) {
-      alert("Login failed: " + error.message);
+      document.getElementById("errorMsg").textContent = error.message;
     }
   });
 }
 
-// SIGNUP
+// SIGNUP FORM
+const signupForm = document.getElementById("signupForm");
 if (signupForm) {
   signupForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -39,16 +37,18 @@ if (signupForm) {
       await createUserWithEmailAndPassword(auth, email, password);
       window.location.href = "today.html";
     } catch (error) {
-      alert("Signup failed: " + error.message);
+      document.getElementById("errorMsg").textContent = error.message;
     }
   });
 }
 
-// REDIRECT IF LOGGED IN
+// REDIRECT LOGGED-IN USERS
 onAuthStateChanged(auth, (user) => {
   const isAuthPage =
-    window.location.pathname.includes("login") ||
-    window.location.pathname.includes("signup");
+    location.pathname.includes("login") ||
+    location.pathname.includes("signup") ||
+    location.pathname.endsWith("/") ||
+    location.pathname.includes("index");
 
   if (user && isAuthPage) {
     window.location.href = "today.html";
