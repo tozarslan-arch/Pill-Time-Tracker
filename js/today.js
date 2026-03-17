@@ -1,11 +1,7 @@
 import { auth, db } from "./firebase.js";
-import { 
-  collection, 
-  getDocs, 
-  doc, 
-  setDoc 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+
 
 // Redirect if not logged in
 onAuthStateChanged(auth, user => {

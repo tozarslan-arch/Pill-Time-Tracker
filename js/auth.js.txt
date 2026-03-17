@@ -1,0 +1,60 @@
+// auth.js
+import { auth } from "./firebase.js";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+// Elements
+const loginForm = document.getElementById("loginForm");
+const signupForm = document.getElementById("signupForm");
+
+// LOGIN
+if (loginForm) {
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = loginForm.email.value.trim();
+    const password = loginForm.password.value.trim();
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      window.location.href = "today.html";
+    } catch (error) {
+      alert("Login failed: " + error.message);
+    }
+  });
+}
+
+// SIGNUP
+if (signupForm) {
+  signupForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = signupForm.email.value.trim();
+    const password = signupForm.password.value.trim();
+
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      window.location.href = "today.html";
+    } catch (error) {
+      alert("Signup failed: " + error.message);
+    }
+  });
+}
+
+// REDIRECT IF LOGGED IN
+onAuthStateChanged(auth, (user) => {
+  const isAuthPage =
+    window.location.pathname.includes("login") ||
+    window.location.pathname.includes("signup");
+
+  if (user && isAuthPage) {
+    window.location.href = "today.html";
+  }
+
+  if (!user && !isAuthPage) {
+    window.location.href = "login.html";
+  }
+});
