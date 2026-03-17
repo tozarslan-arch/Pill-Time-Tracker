@@ -12,7 +12,6 @@ const firebaseConfig = {
   measurementId: "G-TX72Q592LM"
 };
 
-
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
