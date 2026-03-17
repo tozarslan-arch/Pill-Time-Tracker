@@ -3,7 +3,7 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-aut
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBPxT8nRj7eFwzpRwOYTJ_r_vAiT0u9Ssk",
+  appId: "1:1068914011666:web:90a7eeaee80e5b5063b2cb",
   authDomain: "pill-time-tracker.firebaseapp.com",
   projectId: "pill-time-tracker",
   storageBucket: "pill-time-tracker.appspot.com",
