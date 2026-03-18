@@ -18,16 +18,16 @@
 
     <div class="form-section">
       <label for="pill-name">Pill Name</label>
-      <input type="text" id="pill-name" placeholder="Metformin" required>
+      <input type="text" id="pill-name" required>
     </div>
 
     <div class="form-section">
       <label for="pill-dosage">Dosage (optional)</label>
-      <input type="text" id="pill-dosage" placeholder="500mg">
+      <input type="text" id="pill-dosage">
     </div>
 
     <div class="form-section">
-      <label>Select Days to Take</label>
+      <label>Select Days</label>
       <div class="days-grid">
         <label><input type="checkbox" value="Mon"> Mon</label>
         <label><input type="checkbox" value="Tue"> Tue</label>
@@ -40,7 +40,7 @@
     </div>
 
     <div class="form-section">
-      <label>Times to Take</label>
+      <label>Times</label>
 
       <div id="time-list"></div>
 
@@ -70,8 +70,8 @@
     <a href="profile.html">Profile</a>
   </nav>
 
+  <!-- FIX: scripts must load AFTER DOM -->
   <script type="module" src="js/supabase.js"></script>
-  <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/add_pill.js"></script>
 
 </body>

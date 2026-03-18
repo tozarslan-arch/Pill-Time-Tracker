@@ -1,66 +1,83 @@
 import { supabase } from "./supabase.js";
 
-// Add time input dynamically
-document.getElementById("add-time-btn").addEventListener("click", () => {
-  const timeList = document.getElementById("time-list");
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("Add Pill page loaded");
 
-  const wrapper = document.createElement("div");
-  wrapper.classList.add("time-row");
+  const addTimeBtn = document.getElementById("add-time-btn");
+  const saveBtn = document.getElementById("save-pill-btn");
 
-  const timeInput = document.createElement("input");
-  timeInput.type = "time";
-  timeInput.required = true;
+  addTimeBtn.addEventListener("click", () => {
+    console.log("Add time clicked");
 
-  const removeBtn = document.createElement("button");
-  removeBtn.textContent = "Remove";
-  removeBtn.type = "button";
-  removeBtn.classList.add("remove-time-btn");
+    const timeList = document.getElementById("time-list");
 
-  removeBtn.addEventListener("click", () => wrapper.remove());
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("time-row");
 
-  wrapper.appendChild(timeInput);
-  wrapper.appendChild(removeBtn);
-  timeList.appendChild(wrapper);
-});
+    const timeInput = document.createElement("input");
+    timeInput.type = "time";
+    timeInput.required = true;
 
-// Save pill
-document.getElementById("save-pill-btn").addEventListener("click", async () => {
-  const name = document.getElementById("pill-name").value.trim();
-  const dosage = document.getElementById("pill-dosage").value.trim();
+    const removeBtn = document.createElement("button");
+    removeBtn.textContent = "Remove";
+    removeBtn.type = "button";
 
-  const startDate = document.getElementById("start-date").value;
-  const endDate = document.getElementById("end-date").value || null;
+    removeBtn.addEventListener("click", () => wrapper.remove());
 
-  const days = [...document.querySelectorAll(".days-grid input:checked")]
-    .map(cb => cb.value);
+    wrapper.appendChild(timeInput);
+    wrapper.appendChild(removeBtn);
+    timeList.appendChild(wrapper);
+  });
 
-  const times = [...document.querySelectorAll("#time-list input[type='time']")]
-    .map(t => t.value);
+  saveBtn.addEventListener("click", async () => {
+    console.log("Save clicked");
 
-  if (!name || days.length === 0 || times.length === 0) {
-    alert("Please fill all required fields.");
-    return;
-  }
+    const name = document.getElementById("pill-name").value.trim();
+    const dosage = document.getElementById("pill-dosage").value.trim();
+    const startDate = document.getElementById("start-date").value;
+    const endDate = document.getElementById("end-date").value || null;
 
-  const { data: userData } = await supabase.auth.getUser();
-  const userId = userData.user.id;
+    const days = [...document.querySelectorAll(".days-grid input:checked")]
+      .map(cb => cb.value);
 
-  const { error } = await supabase
-    .from("pills")
-    .insert({
-      user_id: userId,
-      name,
-      dosage,
-      days,
-      times,
-      start_date: startDate,
-      end_date: endDate
-    });
+    const times = [...document.querySelectorAll("#time-list input[type='time']")]
+      .map(t => t.value);
 
-  if (error) {
-    console.error(error);
-    alert("Error saving pill.");
-  } else {
-    window.location.href = "today.html";
-  }
+    console.log("Collected days:", days);
+    console.log("Collected times:", times);
+
+    if (!name || days.length === 0 || times.length === 0) {
+      alert("Please fill all required fields.");
+      return;
+    }
+
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+
+    if (userError || !userData?.user) {
+      alert("User not logged in.");
+      return;
+    }
+
+    const userId = userData.user.id;
+
+    const { error } = await supabase
+      .from("pills")
+      .insert({
+        user_id: userId,
+        name,
+        dosage,
+        days,
+        times,
+        start_date: startDate,
+        end_date: endDate
+      });
+
+    if (error) {
+      console.error("Supabase insert error:", error);
+      alert("Error saving pill.");
+    } else {
+      console.log("Pill saved successfully");
+      window.location.href = "today.html";
+    }
+  });
 });
