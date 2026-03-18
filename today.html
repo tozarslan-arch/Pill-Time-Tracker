@@ -1,26 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Today’s Pills</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Today's Pills</title>
+
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 
 <body>
 
-  <h1 class="title">Today</h1>
+  <!-- Header -->
+  <header>
+    <h1>Today's Pills</h1>
+  </header>
 
-  <div id="todayList" class="list"></div>
+  <!-- Main Content -->
+  <main>
+    <div id="pillList" class="pill-list">
+      <!-- Pills will be injected here by today.js -->
+    </div>
 
+    <div class="actions">
+      <a href="add_pill.html" class="btn-primary">Add Pill</a>
+    </div>
+  </main>
+
+  <!-- Bottom Navigation -->
   <nav class="bottom-nav">
-    <a href="today.html" class="nav-item active">📅 Today</a>
-    <a href="add-pill.html" class="nav-item">➕ Add Pill</a>
-    <a href="history.html" class="nav-item">📘 History</a>
-    <a href="profile.html" class="nav-item">👤 Profile</a>
+    <a href="today.html" class="active">Today</a>
+    <a href="add_pill.html">Add Pill</a>
+    <a href="history.html">History</a>
+    <a href="profile.html">Profile</a>
   </nav>
 
-  <script type="module" src="js/firebase.js"></script>
+  <!-- Scripts -->
+  <script type="module" src="js/supabase.js"></script>
   <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/today.js"></script>
 

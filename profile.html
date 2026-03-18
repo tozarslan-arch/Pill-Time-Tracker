@@ -1,31 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Profile</title>
+
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 
 <body>
 
-  <h1 class="title">Profile</h1>
+  <!-- Header -->
+  <header>
+    <h1>Your Profile</h1>
+  </header>
 
-  <div class="card">
-    <p id="userEmail" class="info"></p>
-    <button id="logoutBtn" class="secondary-btn">Logout</button>
-  </div>
+  <!-- Main Content -->
+  <main>
+    <div class="profile-box">
+      <p><strong>Email:</strong></p>
+      <p id="userEmail">Loading...</p>
 
+      <button id="logoutBtn" class="btn-danger">Logout</button>
+    </div>
+  </main>
+
+  <!-- Bottom Navigation -->
   <nav class="bottom-nav">
-    <a href="today.html" class="nav-item">📅 Today</a>
-    <a href="add-pill.html" class="nav-item">➕ Add Pill</a>
-    <a href="history.html" class="nav-item">📘 History</a>
-    <a href="profile.html" class="nav-item active">👤 Profile</a>
+    <a href="today.html">Today</a>
+    <a href="add_pill.html">Add Pill</a>
+    <a href="history.html">History</a>
+    <a href="profile.html" class="active">Profile</a>
   </nav>
 
-  <script type="module" src="js/firebase.js"></script>
+  <!-- Scripts -->
+  <script type="module" src="js/supabase.js"></script>
   <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/profile.js"></script>
 
 </body>
 </html>
+

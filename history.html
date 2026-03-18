@@ -1,28 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>History</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pill History</title>
+
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 
 <body>
 
-  <h1 class="title">History</h1>
+  <!-- Header -->
+  <header>
+    <h1>Pill History</h1>
+  </header>
 
-  <input id="historyDate" type="date" class="input">
+  <!-- Main Content -->
+  <main>
+    <div id="historyList" class="history-list">
+      <!-- Pills will be injected here by history.js -->
+    </div>
+  </main>
 
-  <div id="historyList" class="list"></div>
-
+  <!-- Bottom Navigation -->
   <nav class="bottom-nav">
-    <a href="today.html" class="nav-item">📅 Today</a>
-    <a href="add-pill.html" class="nav-item">➕ Add Pill</a>
-    <a href="history.html" class="nav-item active">📘 History</a>
-    <a href="profile.html" class="nav-item">👤 Profile</a>
+    <a href="today.html">Today</a>
+    <a href="add_pill.html">Add Pill</a>
+    <a href="history.html" class="active">History</a>
+    <a href="profile.html">Profile</a>
   </nav>
 
-  <script type="module" src="js/firebase.js"></script>
+  <!-- Scripts -->
+  <script type="module" src="js/supabase.js"></script>
   <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/history.js"></script>
 

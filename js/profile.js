@@ -1,12 +1,15 @@
-import { auth } from "./firebase.js";
-import {
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import { supabase } from "./supabase.js";
 
-const emailField = document.getElementById("userEmail");
+async function loadProfile() {
+  const { data } = await supabase.auth.getUser();
+  const user = data.user;
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    emailField.textContent = user.email;
+  if (!user) {
+    window.location.href = "login.html";
+    return;
   }
-});
+
+  document.getElementById("userEmail").textContent = user.email;
+}
+
+loadProfile();

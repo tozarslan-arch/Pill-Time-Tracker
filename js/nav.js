@@ -1,7 +1,11 @@
-const items = document.querySelectorAll(".nav-item");
+import { supabase } from "./supabase.js";
 
-items.forEach((item) => {
-  if (item.href.includes(location.pathname)) {
-    item.classList.add("active");
-  }
-});
+// Logout button (if present on page)
+const logoutBtn = document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", async () => {
+    await supabase.auth.signOut();
+    window.location.href = "login.html";
+  });
+}
