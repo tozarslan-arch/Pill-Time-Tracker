@@ -10,28 +10,59 @@
 
 <body>
 
-  <!-- Header -->
   <header>
-    <h1>Add a Pill</h1>
+    <h1>Add Pill</h1>
   </header>
 
-  <!-- Main Content -->
   <main>
-    <form id="addPillForm" class="form-container">
 
-      <label for="pillName">Pill Name</label>
-      <input type="text" id="pillName" name="pillName" required />
+    <div class="form-section">
+      <label for="pill-name">Pill Name</label>
+      <input type="text" id="pill-name" placeholder="Metformin" required>
+    </div>
 
-      <label for="pillTime">Time</label>
-      <input type="time" id="pillTime" name="pillTime" required />
+    <div class="form-section">
+      <label for="pill-dosage">Dosage (optional)</label>
+      <input type="text" id="pill-dosage" placeholder="500mg">
+    </div>
 
-      <p id="errorMsg" class="error"></p>
+    <div class="form-section">
+      <label>Select Days to Take</label>
+      <div class="days-grid">
+        <label><input type="checkbox" value="Mon"> Mon</label>
+        <label><input type="checkbox" value="Tue"> Tue</label>
+        <label><input type="checkbox" value="Wed"> Wed</label>
+        <label><input type="checkbox" value="Thu"> Thu</label>
+        <label><input type="checkbox" value="Fri"> Fri</label>
+        <label><input type="checkbox" value="Sat"> Sat</label>
+        <label><input type="checkbox" value="Sun"> Sun</label>
+      </div>
+    </div>
 
-      <button type="submit" class="btn-primary">Save Pill</button>
-    </form>
+    <div class="form-section">
+      <label>Times to Take</label>
+
+      <div id="time-list"></div>
+
+      <button id="add-time-btn" type="button" class="secondary-btn">
+        + Add Time
+      </button>
+    </div>
+
+    <div class="form-section">
+      <label for="start-date">Start Date</label>
+      <input type="date" id="start-date" required>
+    </div>
+
+    <div class="form-section">
+      <label for="end-date">End Date (optional)</label>
+      <input type="date" id="end-date">
+    </div>
+
+    <button id="save-pill-btn" class="primary-btn">Save Pill</button>
+
   </main>
 
-  <!-- Bottom Navigation -->
   <nav class="bottom-nav">
     <a href="today.html">Today</a>
     <a href="add_pill.html" class="active">Add Pill</a>
@@ -39,10 +70,9 @@
     <a href="profile.html">Profile</a>
   </nav>
 
-  <!-- Scripts -->
   <script type="module" src="js/supabase.js"></script>
   <script type="module" src="js/auth.js"></script>
-  <script type="module" src="js/add-pill.js"></script>
+  <script type="module" src="js/add_pill.js"></script>
 
 </body>
 </html>

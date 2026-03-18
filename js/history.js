@@ -1,32 +1,49 @@
-import { auth, db } from "./firebase.js";
-import {
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-import {
-  collection,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import { supabase } from "./supabase.js";
 
-const dateInput = document.getElementById("historyDate");
-const list = document.getElementById("historyList");
+const historyList = document.getElementById("historyList");
 
-onAuthStateChanged(auth, (user) => {
-  if (!user) return;
+async function loadHistory() {
+  const { data: userData } = await supabase.auth.getUser();
+  const userId = userData.user.id;
 
-  dateInput.addEventListener("change", async () => {
-    const date = dateInput.value;
-    if (!date) return;
+  const { data: pills, error } = await supabase
+    .from("pills")
+    .select("*")
+    .eq("user_id", userId);
 
-    const logsRef = collection(db, "users", user.uid, "logs", date, "items");
-    const snapshot = await getDocs(logsRef);
+  if (error) {
+    console.error(error);
+    return;
+  }
 
-    list.innerHTML = "";
+  renderHistory(pills);
+}
 
-    snapshot.forEach((doc) => {
-      const item = document.createElement("div");
-      item.className = "pill-item";
-      item.textContent = doc.data().name;
-      list.appendChild(item);
-    });
+function renderHistory(pills) {
+  historyList.innerHTML = "";
+
+  if (pills.length === 0) {
+    historyList.innerHTML = "<p>No pill history yet.</p>";
+    return;
+  }
+
+  pills.forEach(pill => {
+    const div = document.createElement("div");
+    div.classList.add("history-card");
+
+    div.innerHTML = `
+      <h3>${pill.name}</h3>
+      <p>${pill.dosage || ""}</p>
+
+      <p><strong>Days:</strong> ${pill.days.join(", ")}</p>
+      <p><strong>Times:</strong> ${pill.times.join(", ")}</p>
+
+      <p><strong>Start:</strong> ${pill.start_date}</p>
+      <p><strong>End:</strong> ${pill.end_date || "Ongoing"}</p>
+    `;
+
+    historyList.appendChild(div);
   });
-});
+}
+
+loadHistory();

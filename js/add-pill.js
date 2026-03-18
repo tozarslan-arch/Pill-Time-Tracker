@@ -1,33 +1,66 @@
-import { auth, db } from "./firebase.js";
-import {
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-import {
-  collection,
-  addDoc
-} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import { supabase } from "./supabase.js";
 
-const form = document.getElementById("addPillForm");
+// Add time input dynamically
+document.getElementById("add-time-btn").addEventListener("click", () => {
+  const timeList = document.getElementById("time-list");
 
-onAuthStateChanged(auth, (user) => {
-  if (!user) return;
+  const wrapper = document.createElement("div");
+  wrapper.classList.add("time-row");
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  const timeInput = document.createElement("input");
+  timeInput.type = "time";
+  timeInput.required = true;
 
-    const name = form.name.value.trim();
-    const time = form.time.value;
-    const start = form.start.value;
-    const end = form.end.value;
+  const removeBtn = document.createElement("button");
+  removeBtn.textContent = "Remove";
+  removeBtn.type = "button";
+  removeBtn.classList.add("remove-time-btn");
 
-    await addDoc(collection(db, "users", user.uid, "pills"), {
+  removeBtn.addEventListener("click", () => wrapper.remove());
+
+  wrapper.appendChild(timeInput);
+  wrapper.appendChild(removeBtn);
+  timeList.appendChild(wrapper);
+});
+
+// Save pill
+document.getElementById("save-pill-btn").addEventListener("click", async () => {
+  const name = document.getElementById("pill-name").value.trim();
+  const dosage = document.getElementById("pill-dosage").value.trim();
+
+  const startDate = document.getElementById("start-date").value;
+  const endDate = document.getElementById("end-date").value || null;
+
+  const days = [...document.querySelectorAll(".days-grid input:checked")]
+    .map(cb => cb.value);
+
+  const times = [...document.querySelectorAll("#time-list input[type='time']")]
+    .map(t => t.value);
+
+  if (!name || days.length === 0 || times.length === 0) {
+    alert("Please fill all required fields.");
+    return;
+  }
+
+  const { data: userData } = await supabase.auth.getUser();
+  const userId = userData.user.id;
+
+  const { error } = await supabase
+    .from("pills")
+    .insert({
+      user_id: userId,
       name,
-      time,
-      start,
-      end
+      dosage,
+      days,
+      times,
+      start_date: startDate,
+      end_date: endDate
     });
 
-    alert("Pill saved!");
+  if (error) {
+    console.error(error);
+    alert("Error saving pill.");
+  } else {
     window.location.href = "today.html";
-  });
+  }
 });

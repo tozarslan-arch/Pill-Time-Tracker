@@ -1,26 +1,69 @@
-import { auth, db } from "./firebase.js";
-import {
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
-import {
-  collection,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+import { supabase } from "./supabase.js";
 
-onAuthStateChanged(auth, async (user) => {
-  if (!user) return;
+const pillList = document.getElementById("pillList");
 
-  const pillsRef = collection(db, "users", user.uid, "pills");
-  const snapshot = await getDocs(pillsRef);
+async function loadTodayPills() {
+  const { data: userData } = await supabase.auth.getUser();
+  const userId = userData.user.id;
 
-  const list = document.getElementById("todayList");
-  list.innerHTML = "";
+  const { data: pills, error } = await supabase
+    .from("pills")
+    .select("*")
+    .eq("user_id", userId);
 
-  snapshot.forEach((doc) => {
-    const pill = doc.data();
-    const item = document.createElement("div");
-    item.className = "pill-item";
-    item.textContent = `${pill.name} — ${pill.time}`;
-    list.appendChild(item);
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  const today = new Date();
+  const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][today.getDay()];
+
+  const todayPills = [];
+
+  pills.forEach(pill => {
+    if (pill.days.includes(weekday)) {
+      pill.times.forEach(time => {
+        todayPills.push({
+          id: pill.id,
+          name: pill.name,
+          dosage: pill.dosage,
+          time
+        });
+      });
+    }
   });
-});
+
+  renderPills(todayPills);
+}
+
+function renderPills(list) {
+  pillList.innerHTML = "";
+
+  if (list.length === 0) {
+    pillList.innerHTML = "<p>No pills scheduled for today.</p>";
+    return;
+  }
+
+  list.sort((a, b) => a.time.localeCompare(b.time));
+
+  list.forEach(pill => {
+    const div = document.createElement("div");
+    div.classList.add("pill-card");
+
+    div.innerHTML = `
+      <div class="pill-info">
+        <h3>${pill.name}</h3>
+        <p>${pill.dosage || ""}</p>
+        <p><strong>${pill.time}</strong></p>
+      </div>
+      <button class="taken-btn" data-id="${pill.id}" data-time="${pill.time}">
+        Taken!
+      </button>
+    `;
+
+    pillList.appendChild(div);
+  });
+}
+
+loadTodayPills();
