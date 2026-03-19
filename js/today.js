@@ -1,3 +1,5 @@
+console.log("today.js version 3");
+
 import { supabase } from "./supabase.js";
 
 const pillList = document.getElementById("pillList");
