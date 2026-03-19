@@ -16,13 +16,19 @@ async function loadTodayPills() {
     return;
   }
 
+  // Determine today's weekday and date
   const today = new Date();
   const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][today.getDay()];
+  const todayDate = today.toISOString().split("T")[0]; // YYYY-MM-DD
 
   const todayPills = [];
 
   pills.forEach(pill => {
-    if (pill.days.includes(weekday)) {
+    const isCorrectDay = pill.days.includes(weekday);
+    const isAfterStart = !pill.start_date || pill.start_date <= todayDate;
+    const isBeforeEnd = !pill.end_date || pill.end_date >= todayDate;
+
+    if (isCorrectDay && isAfterStart && isBeforeEnd) {
       pill.times.forEach(time => {
         todayPills.push({
           id: pill.id,
