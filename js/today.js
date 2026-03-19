@@ -1,20 +1,20 @@
-console.log("today.js version 3");
-
 import { supabase } from "./supabase.js";
 
 const pillList = document.getElementById("pillList");
 
 async function loadTodayPills() {
-  // Wait for auth session to be ready
-  const { data: userData } = await supabase.auth.getUser();
+  console.log("today.js version 4");
 
-  if (!userData || !userData.user) {
-    console.log("Auth not ready, retrying...");
+  // Get session instead of getUser()
+  const { data: sessionData } = await supabase.auth.getSession();
+
+  if (!sessionData || !sessionData.session) {
+    console.log("Session not ready, retrying...");
     setTimeout(loadTodayPills, 200);
     return;
   }
 
-  const userId = userData.user.id;
+  const userId = sessionData.session.user.id;
 
   const { data: pills, error } = await supabase
     .from("pills")
