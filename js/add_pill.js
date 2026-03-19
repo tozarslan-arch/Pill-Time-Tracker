@@ -66,8 +66,8 @@ saveBtn.addEventListener("click", async () => {
       user_id: userId,
       name,
       dosage,
-      days,
-      times,
+days: ["Mon", "Wed"]
+times: ["10:00", "14:30"]
       start_date: startDate,
       end_date: endDate
     });
