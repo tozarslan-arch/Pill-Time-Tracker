@@ -1,4 +1,5 @@
 import { supabase } from "./supabase.js";
+supabase.auth.getUser().then(console.log);
 
 async function loadProfile() {
   const { data } = await supabase.auth.getUser();
