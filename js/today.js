@@ -7,7 +7,6 @@ const pillList = document.getElementById("pillList");
 async function loadTodayPills() {
   console.log("today.js version 4");
 
-  // Get session instead of getUser()
   const { data: sessionData } = await supabase.auth.getSession();
 
   if (!sessionData || !sessionData.session) {
