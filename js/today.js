@@ -1,6 +1,6 @@
-supabase.auth.getUser().then(console.log);
-
 import { supabase } from "./supabase.js";
+
+supabase.auth.getUser().then(console.log);
 
 const pillList = document.getElementById("pillList");
 
