@@ -3,7 +3,15 @@ import { supabase } from "./supabase.js";
 const pillList = document.getElementById("pillList");
 
 async function loadTodayPills() {
+  // Wait for auth session to be ready
   const { data: userData } = await supabase.auth.getUser();
+
+  if (!userData || !userData.user) {
+    console.log("Auth not ready, retrying...");
+    setTimeout(loadTodayPills, 200);
+    return;
+  }
+
   const userId = userData.user.id;
 
   const { data: pills, error } = await supabase
@@ -16,10 +24,9 @@ async function loadTodayPills() {
     return;
   }
 
-  // Determine today's weekday and date
   const today = new Date();
   const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][today.getDay()];
-  const todayDate = today.toISOString().split("T")[0]; // YYYY-MM-DD
+  const todayDate = today.toISOString().split("T")[0];
 
   const todayPills = [];
 
