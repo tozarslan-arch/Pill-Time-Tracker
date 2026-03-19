@@ -1,3 +1,5 @@
+console.log("TODAY.JS IS RUNNING");
+
 import { supabase } from "./supabase.js";
 
 supabase.auth.getUser().then(console.log);
