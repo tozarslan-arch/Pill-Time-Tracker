@@ -29,61 +29,56 @@ document.addEventListener("DOMContentLoaded", () => {
     timeList.appendChild(wrapper);
   });
 
-  saveBtn.addEventListener("click", async () => {
-    console.log("Save clicked");
+saveBtn.addEventListener("click", async () => {
+  console.log("Save clicked");
 
-    const name = document.getElementById("pill-name").value.trim();
-    const dosage = document.getElementById("pill-dosage").value.trim();
-    const startDate = document.getElementById("start-date").value;
-    const endDate = document.getElementById("end-date").value || null;
-const days = [...document.querySelectorAll(".days-grid input:checked")]
-  .map(cb => cb.value);
+  const name = document.getElementById("pill-name").value.trim();
+  const dosage = document.getElementById("pill-dosage").value.trim();
+  const startDate = document.getElementById("start-date").value;
+  const endDate = document.getElementById("end-date").value || null;
 
-const times = [...document.querySelectorAll("#time-list input[type='time']")]
-  .map(t => t.value);
+  const days = [...document.querySelectorAll(".days-grid input:checked")]
+    .map(cb => cb.value);
 
+  const times = [...document.querySelectorAll("#time-list input[type='time']")]
+    .map(t => t.value);
 
-    const days = [...document.querySelectorAll(".days-grid input:checked")]
-      .map(cb => cb.value);
+  console.log("Collected days:", days);
+  console.log("Collected times:", times);
 
-    const times = [...document.querySelectorAll("#time-list input[type='time']")]
-      .map(t => t.value);
+  if (!name || days.length === 0 || times.length === 0) {
+    alert("Please fill all required fields.");
+    return;
+  }
 
-    console.log("Collected days:", days);
-    console.log("Collected times:", times);
+  const { data: userData, error: userError } = await supabase.auth.getUser();
 
-    if (!name || days.length === 0 || times.length === 0) {
-      alert("Please fill all required fields.");
-      return;
-    }
+  if (userError || !userData?.user) {
+    alert("User not logged in.");
+    return;
+  }
 
-    const { data: userData, error: userError } = await supabase.auth.getUser();
+  const userId = userData.user.id;
 
-    if (userError || !userData?.user) {
-      alert("User not logged in.");
-      return;
-    }
+  const { error } = await supabase
+    .from("pills")
+    .insert({
+      user_id: userId,
+      name,
+      dosage,
+      days,
+      times,
+      start_date: startDate,
+      end_date: endDate
+    });
 
-    const userId = userData.user.id;
+  if (error) {
+    console.error("Supabase insert error:", error);
+    alert("Error saving pill.");
+  } else {
+    console.log("Pill saved successfully");
+    window.location.href = "today.html";
+  }
+});
 
-    const { error } = await supabase
-      .from("pills")
-      .insert({
-        user_id: userId,
-        name,
-        dosage,
-        days,
-        times,
-        start_date: startDate,
-        end_date: endDate
-      });
-
-    if (error) {
-      console.error("Supabase insert error:", error);
-      alert("Error saving pill.");
-    } else {
-      console.log("Pill saved successfully");
-      window.location.href = "today.html";
-    }
-  });
 });
