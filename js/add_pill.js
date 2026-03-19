@@ -36,6 +36,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const dosage = document.getElementById("pill-dosage").value.trim();
     const startDate = document.getElementById("start-date").value;
     const endDate = document.getElementById("end-date").value || null;
+const selectedDays = ...
+const selectedTimes = ...
 
     const days = [...document.querySelectorAll(".days-grid input:checked")]
       .map(cb => cb.value);
